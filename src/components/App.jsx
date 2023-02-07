@@ -4,6 +4,7 @@ import Filter from './Filter/Filter';
 import ContactsList from './ContactsList/ContactsList';
 import { addFilter } from 'redux/filter/sliceFilter';
 import { add, remove } from 'redux/contacts/sliceContacts';
+import { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 const App = () => {
@@ -27,15 +28,15 @@ const App = () => {
     dispatch(addFilter(input.currentTarget.value));
   };
 
-  const filterContacts = () => {
-    if (filter !== '') {
-      return contacts.filter(contact =>
-        contact.name.toLowerCase().includes(filter.toLowerCase().trim())
-      );
-    } else {
-      return contacts;
-    }
-  };
+const filteredContacts = useMemo(() => {
+  if (filter !== '') {
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase().trim())
+    );
+  } else {
+    return contacts;
+  }
+}, [contacts, filter])
 
   const onDeleteBtn = id => {
     dispatch(remove(id));
@@ -47,7 +48,7 @@ const App = () => {
 
       <Filter onDataUpdate={handleDataUpdate} />
 
-      <ContactsList arrContacts={filterContacts()} onDeleteBtn={onDeleteBtn} />
+      <ContactsList arrContacts={filteredContacts} onDeleteBtn={onDeleteBtn} />
     </>
   );
 };
