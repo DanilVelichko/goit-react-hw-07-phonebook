@@ -3,14 +3,17 @@ import Form from './Form/Form';
 import Filter from './Filter/Filter';
 import ContactsList from './ContactsList/ContactsList';
 import { addFilter } from 'redux/filter/sliceFilter';
-import { add, remove } from 'redux/contacts/sliceContacts';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { addContacts, deleteContact, fetchContacts } from 'redux/operations';
+import { getError, getIsLoading, getContacts, getFilter } from 'redux/selectors';
 
 const App = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts);
-  const filter = useSelector(state => state.filter);
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+  const isLoading = useSelector(getIsLoading);
+  const error = useSelector(getError);
 
   const formSubmitHandler = data => {
     const matchNameInput = contacts.find(
@@ -20,7 +23,7 @@ const App = () => {
     if (matchNameInput) {
       alert(data.name + ' is already in contacts.');
     } else {
-      dispatch(add(data));
+      dispatch(addContacts(data));
     }
   };
 
@@ -28,27 +31,33 @@ const App = () => {
     dispatch(addFilter(input.currentTarget.value));
   };
 
-const filteredContacts = useMemo(() => {
-  if (filter !== '') {
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase().trim())
-    );
-  } else {
-    return contacts;
-  }
-}, [contacts, filter])
+  const filteredContacts = useMemo(() => {
+    if (filter !== '') {
+      return contacts.filter(contact =>
+        contact.name.toLowerCase().includes(filter.toLowerCase().trim())
+      );
+    } else {
+      return contacts;
+    }
+  }, [contacts, filter]);
 
   const onDeleteBtn = id => {
-    dispatch(remove(id));
+    dispatch(deleteContact(id));
   };
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <>
       <Form clickSubmit={formSubmitHandler} />
 
       <Filter onDataUpdate={handleDataUpdate} />
-
+      
       <ContactsList arrContacts={filteredContacts} onDeleteBtn={onDeleteBtn} />
+
+      {isLoading && !error && <h4 >Request in progress...</h4>}
     </>
   );
 };

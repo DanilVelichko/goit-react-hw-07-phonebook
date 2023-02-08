@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
 import css from './Form.module.css';
 
@@ -21,7 +20,6 @@ const Form = ({ clickSubmit }) => {
     e.preventDefault();
 
     const newObjContacts = {
-      id: nanoid(),
       name: name,
       number: number,
     };
