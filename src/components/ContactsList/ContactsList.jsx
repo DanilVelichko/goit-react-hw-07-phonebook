@@ -4,9 +4,10 @@ import css from './ContactsList.module.css';
 import ContactsItem from 'components/ContactsItem/ContactsItem';
 
 const ContactsList = ({ arrContacts, onDeleteBtn }) => {
+
   return (
     <ul className={css.contacts_list}>
-      {arrContacts.map(contact => {
+      {arrContacts.length > 0 && arrContacts.map(contact => {
         return (
           <ContactsItem
             id={contact.id}
