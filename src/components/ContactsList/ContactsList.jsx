@@ -7,7 +7,7 @@ const ContactsList = ({ arrContacts, onDeleteBtn }) => {
 
   return (
     <ul className={css.contacts_list}>
-      {arrContacts.length > 0 && arrContacts.map(contact => {
+      {arrContacts.map(contact => {
         return (
           <ContactsItem
             id={contact.id}

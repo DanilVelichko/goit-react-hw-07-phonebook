@@ -5,8 +5,17 @@ import ContactsList from './ContactsList/ContactsList';
 import { addFilter } from 'redux/filter/sliceFilter';
 import { useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContacts, deleteContact, fetchContacts } from 'redux/operations';
-import { selectError, selectIsLoading, selectContacts, selectFilter } from 'redux/selectors';
+import {
+  addContacts,
+  deleteContact,
+  fetchContacts,
+} from 'redux/contacts/operations';
+import {
+  selectError,
+  selectIsLoading,
+  selectContacts,
+  selectFilter,
+} from 'redux/selectors';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -52,12 +61,14 @@ const App = () => {
   return (
     <>
       <Form clickSubmit={formSubmitHandler} />
-
       <Filter onDataUpdate={handleDataUpdate} />
-      
-      <ContactsList arrContacts={filteredContacts} onDeleteBtn={onDeleteBtn} />
-
-      {isLoading && !error && <h4 >Request in progress...</h4>}
+      {filteredContacts.length > 0 && 
+        <ContactsList
+          arrContacts={filteredContacts}
+          onDeleteBtn={onDeleteBtn}
+        />
+      }
+      {isLoading && !error && <h4>Request in progress...</h4>}
     </>
   );
 };
