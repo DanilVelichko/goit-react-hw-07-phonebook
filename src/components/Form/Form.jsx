@@ -36,7 +36,7 @@ const Form = ({ clickSubmit }) => {
 
   return (
     <>
-      <h1>Phonebook</h1>
+      <h2>Phonebook</h2>
       <form onSubmit={handleSubmit}>
         <h3>Name</h3>
         <label>

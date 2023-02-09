@@ -1,7 +1,4 @@
 import React from 'react';
-import Form from './Form/Form';
-import Filter from './Filter/Filter';
-import ContactsList from './ContactsList/ContactsList';
 import { addFilter } from 'redux/filter/sliceFilter';
 import { useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,18 +8,20 @@ import {
   fetchContacts,
 } from 'redux/contacts/operations';
 import {
-  selectError,
-  selectIsLoading,
   selectContacts,
   selectFilter,
 } from 'redux/selectors';
+import Layout from './Layout/Layout';
+import { Routes, Route } from 'react-router-dom';
+import Phonebook from 'pages/Phonebook/Phonebook';
+import Login from 'pages/LogIn/Login';
+import Registration from 'pages/Registration/Registration';
+
 
 const App = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
   const filter = useSelector(selectFilter);
-  const isLoading = useSelector(selectIsLoading);
-  const error = useSelector(selectError);
 
   const formSubmitHandler = data => {
     const matchNameInput = contacts.find(
@@ -59,17 +58,23 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <>
-      <Form clickSubmit={formSubmitHandler} />
-      <Filter onDataUpdate={handleDataUpdate} />
-      {filteredContacts.length > 0 && 
-        <ContactsList
-          arrContacts={filteredContacts}
-          onDeleteBtn={onDeleteBtn}
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route
+          path="/phonebook"
+          element={
+            <Phonebook
+              clickSubmit={formSubmitHandler}
+              onDataUpdate={handleDataUpdate}
+              arrContacts={filteredContacts}
+              onDeleteBtn={onDeleteBtn}
+            />
+          }
         />
-      }
-      {isLoading && !error && <h4>Request in progress...</h4>}
-    </>
+        <Route path='/login' element={<Login />} />
+        <Route path='/registration' element={<Registration/>} />
+      </Route>
+    </Routes>
   );
 };
 
